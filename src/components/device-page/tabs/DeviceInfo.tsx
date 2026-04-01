@@ -13,7 +13,6 @@ import { toHex } from "../../../utils.js";
 import { sendMessage } from "../../../websocket/WebSocketManager.js";
 import DeviceControlEditName from "../../device/DeviceControlEditName.js";
 import DeviceControlGroup from "../../device/DeviceControlGroup.js";
-import DeviceControlUpdateDesc from "../../device/DeviceControlUpdateDesc.js";
 import DeviceImage from "../../device/DeviceImage.js";
 import { hasOtaCluster } from "../../device/index.js";
 import { formatOtaFileVersion } from "../../ota-page/index.js";
@@ -253,15 +252,14 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                     <DeviceControlEditName
                         sourceIdx={sourceIdx}
                         name={device.friendly_name}
+                        description={device.description || ""}
                         renameDevice={renameDevice}
+                        setDeviceDescription={setDeviceDescription}
                         homeassistantEnabled={homeassistantEnabled}
                         style="btn-link btn-md btn-square"
                     />
                 </h2>
-                <div>
-                    {device.description || ""}
-                    <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
-                </div>
+                {device.description && <p className="text-base-content/60">{device.description}</p>}
                 <div className="flex flex-row flex-wrap gap-2">
                     <span className={`badge ${device.definition ? SOURCE_BADGE_COLOR[device.definition.source] : ""}`}>
                         <DisplayValue name="supported" value={device.supported} />

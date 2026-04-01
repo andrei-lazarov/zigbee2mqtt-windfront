@@ -4,75 +4,101 @@ import { useTranslation } from "react-i18next";
 import Button from "../../Button.js";
 import CheckboxField from "../../form-fields/CheckboxField.js";
 import InputField from "../../form-fields/InputField.js";
+import TextareaField from "../../form-fields/TextareaField.js";
 import Modal from "../Modal.js";
 
 export type RenameActionProps = {
     sourceIdx: number;
     name: string;
+    description?: string;
     homeassistantEnabled: boolean;
     renameDevice(sourceIdx: number, old: string, newName: string, homeassistantRename: boolean): Promise<void>;
+    setDeviceDescription?(id: string, description: string): Promise<void>;
 };
-export const RenameDeviceModal = NiceModal.create(({ sourceIdx, homeassistantEnabled, name, renameDevice }: RenameActionProps): JSX.Element => {
-    const modal = useModal();
-    const { t } = useTranslation(["zigbee", "common"]);
-    const [isHASSRename, setIsHASSRename] = useState(false);
-    const [friendlyName, setFriendlyName] = useState(name);
+export const RenameDeviceModal = NiceModal.create(
+    ({ sourceIdx, homeassistantEnabled, name, description: initialDescription = "", renameDevice, setDeviceDescription }: RenameActionProps): JSX.Element => {
+        const modal = useModal();
+        const { t } = useTranslation(["zigbee", "common"]);
+        const [isHASSRename, setIsHASSRename] = useState(false);
+        const [friendlyName, setFriendlyName] = useState(name);
+        const [description, setDescription] = useState(initialDescription);
 
-    useEffect(() => {
-        setFriendlyName(name);
-    }, [name]);
+        useEffect(() => {
+            setFriendlyName(name);
+        }, [name]);
 
-    useEffect(() => {
-        const close = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                e.preventDefault();
-                modal.remove();
-            }
-        };
+        useEffect(() => {
+            setDescription(initialDescription);
+        }, [initialDescription]);
 
-        window.addEventListener("keydown", close);
+        useEffect(() => {
+            const close = (e: KeyboardEvent) => {
+                if (e.key === "Escape") {
+                    e.preventDefault();
+                    modal.remove();
+                }
+            };
 
-        return () => window.removeEventListener("keydown", close);
-    }, [modal]);
+            window.addEventListener("keydown", close);
 
-    return (
-        <Modal
-            isOpen={modal.visible}
-            title={`${t(($) => $.rename_device)} ${name}`}
-            footer={
-                <>
-                    <Button className="btn btn-neutral" onClick={modal.remove}>
-                        {t(($) => $.cancel, { ns: "common" })}
-                    </Button>
-                    <Button
-                        className="btn btn-primary ms-1"
-                        onClick={async () => {
-                            modal.remove();
-                            await renameDevice(sourceIdx, name, friendlyName, isHASSRename);
-                        }}
-                    >
-                        {t(($) => $.rename_device)}
-                    </Button>
-                </>
-            }
-        >
-            <div className="flex flex-col gap-2">
-                <InputField
-                    name="friendly_name"
-                    label={t(($) => $.friendly_name, { ns: "common" })}
-                    onChange={(e) => setFriendlyName(e.target.value)}
-                    value={friendlyName}
-                    type="text"
-                />
-                {homeassistantEnabled && (
-                    <CheckboxField
-                        label={t(($) => $.update_Home_assistant_entity_id)}
-                        name="update_Home_assistant_entity_id"
-                        onChange={(e) => setIsHASSRename(e.target.checked)}
-                        checked={isHASSRename}
+            return () => window.removeEventListener("keydown", close);
+        }, [modal]);
+
+        return (
+            <Modal
+                isOpen={modal.visible}
+                title={`${t(($) => $.rename_device)} ${name}`}
+                footer={
+                    <>
+                        <Button className="btn btn-neutral" onClick={modal.remove}>
+                            {t(($) => $.cancel, { ns: "common" })}
+                        </Button>
+                        <Button
+                            className="btn btn-primary ms-1"
+                            onClick={async () => {
+                                modal.remove();
+
+                                if (friendlyName !== name) {
+                                    await renameDevice(sourceIdx, name, friendlyName, isHASSRename);
+                                }
+
+                                if (description !== initialDescription && setDeviceDescription) {
+                                    await setDeviceDescription(name, description);
+                                }
+                            }}
+                        >
+                            {t(($) => $.save, { ns: "common" })}
+                        </Button>
+                    </>
+                }
+            >
+                <div className="flex flex-col gap-2">
+                    <InputField
+                        name="friendly_name"
+                        label={t(($) => $.friendly_name, { ns: "common" })}
+                        onChange={(e) => setFriendlyName(e.target.value)}
+                        value={friendlyName}
+                        type="text"
                     />
-                )}
-            </div>
-        </Modal>
-    );
-});
+                    {setDeviceDescription && (
+                        <TextareaField
+                            label={t(($) => $.description)}
+                            name="description"
+                            onChange={(e) => setDescription(e.target.value)}
+                            rows={3}
+                            value={description}
+                        />
+                    )}
+                    {homeassistantEnabled && (
+                        <CheckboxField
+                            label={t(($) => $.update_Home_assistant_entity_id)}
+                            name="update_Home_assistant_entity_id"
+                            onChange={(e) => setIsHASSRename(e.target.checked)}
+                            checked={isHASSRename}
+                        />
+                    )}
+                </div>
+            </Modal>
+        );
+    },
+);
