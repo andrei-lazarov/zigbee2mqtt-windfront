@@ -258,6 +258,10 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                         style="btn-link btn-md btn-square"
                     />
                 </h2>
+                <div>
+                    {device.description || ""}
+                    <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
+                </div>
                 <div className="flex flex-row flex-wrap gap-2">
                     <span className={`badge ${device.definition ? SOURCE_BADGE_COLOR[device.definition.source] : ""}`}>
                         <DisplayValue name="supported" value={device.supported} />
@@ -278,10 +282,6 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                     <span className="badge opacity-70 tooltip tooltip-bottom" data-tip={device.interview_state}>
                         {t(($) => $.interview_state)}: {deviceInterviewState}
                     </span>
-                </div>
-                <div>
-                    {device.description || ""}
-                    <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
                 </div>
                 <div className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-2 text-wrap">
                     <div className="font-semibold text-base-content/70">{t(($) => $.type)}</div>
