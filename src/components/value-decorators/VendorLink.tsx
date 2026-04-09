@@ -25,7 +25,11 @@ const VendorLink = memo(({ supported, definitionVendor, icon = false }: VendorLi
     return (
         <Link target="_blank" rel="noopener noreferrer" to={url} className="link link-hover">
             {label}
-            {icon ? <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="ms-0.5" /> : null}
+            <span className="whitespace-nowrap">
+                {'\u2060'}
+                {icon ? <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="ms-0.5" /> : null}
+                {'\u2060'}
+            </span>
         </Link>
     );
 });
