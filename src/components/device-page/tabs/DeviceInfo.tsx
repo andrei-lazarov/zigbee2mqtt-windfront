@@ -246,7 +246,7 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
             <figure className="w-64 h-64" style={{ overflow: "visible" }}>
                 <DeviceImage device={device} otaState={deviceState.update?.state} disabled={device.disabled} noIndicator />
             </figure>
-            <div className="card-body py-0 px-3">
+            <div className="card-body py-0 px-3 gap-0">
                 <h2 className="card-title">
                     {device.friendly_name}
                     <DeviceControlEditName
@@ -281,7 +281,7 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                         {t(($) => $.interview_state)}: {deviceInterviewState}
                     </span>
                 </div>
-                <div className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-2 text-wrap">
+                <div className="grid grid-cols-[max-content_1fr] mt-4 gap-x-3 gap-y-2 text-wrap">
                     <div className="font-semibold text-base-content/70">{t(($) => $.type)}</div>
                     <div className="min-w-0">
                         <p className="font-semibold">{device.type}</p>
