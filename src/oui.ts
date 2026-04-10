@@ -3,6 +3,12 @@
  * https://standards-oui.ieee.org/oui/oui.csv
  */
 export const OUI = new Map([
+    // unofficial - seen on KAJPLATS
+    ["0008fd", "Silicon Laboratories"],
+    ["00180d", "Silicon Laboratories"],
+    ["008c73", "Silicon Laboratories"]
+    ["00f0fd", "Silicon Laboratories"],
+    // official
     ["00037a", "Taiyo Yuden Co., Ltd."],
     ["000425", "Atmel Corporation"],
     ["0004a3", "Microchip Technology Inc."],
