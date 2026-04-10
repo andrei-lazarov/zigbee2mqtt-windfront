@@ -25,6 +25,10 @@ type TouchlinkTableData = {
     resetInProgress: boolean;
 };
 
+// Identify and reset compatible devices that are **close to the coordinator** (without necessarily being on the same network).
+// Scan for devices, or directly target Philips Hue bulbs by their serial number
+// Scanning does not currently work with ember adapters
+
 export default function TouchlinkPage() {
     const { t } = useTranslation(["touchlink", "common", "zigbee", "settings"]);
     const bridgeInfo = useAppStore((state) => state.bridgeInfo);
